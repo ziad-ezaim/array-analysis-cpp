@@ -1,0 +1,113 @@
+#include <iostream>                 // Allows input/output operations
+using namespace std;                // Allows using standard names easily
+
+// Structure for a node in the queue
+struct Node {
+    int data;                       // Value stored in the node
+    Node* next;                     // Pointer to the next node
+};
+
+// Front and rear pointers for the queue
+Node* frontQueue = NULL;            // Points to the first element
+Node* rearQueue = NULL;             // Points to the last element
+
+// Function to check if the queue is empty
+bool isEmpty() {
+    return frontQueue == NULL;      // If front is NULL, queue is empty
+}
+
+// Function to count number of elements in the queue
+int countQueue() {
+    int count = 0;                  // Counter
+    Node* temp = frontQueue;        // Start from the front
+
+    while (temp != NULL) {          // Traverse until end
+        count++;                    // Increase counter
+        temp = temp->next;          // Move to next node
+    }
+    return count;                   // Return total count
+}
+
+// Function to enqueue (add) a new value
+void enqueue(int value) {
+    Node* newNode = new Node;       // Create a new node
+    newNode->data = value;          // Set its value
+    newNode->next = NULL;           // New node always points to NULL
+
+    if (isEmpty()) {                // If queue is empty
+        frontQueue = newNode;       // New node becomes the front
+        rearQueue = newNode;        // And also the rear
+    }
+    else {
+        rearQueue->next = newNode;  // Link old rear to new node
+        rearQueue = newNode;        // Update rear to new node
+    }
+}
+
+// Function to dequeue (remove) a value from the front
+void dequeue() {
+    if (isEmpty()) {                // If queue is empty
+        cout << "Queue is empty!" << endl;
+        return;
+    }
+
+    Node* temp = frontQueue;        // Save current front
+    frontQueue = frontQueue->next;  // Move front to next element
+    delete temp;                    // Delete old front
+
+    if (frontQueue == NULL)         // If queue becomes empty after dequeue
+        rearQueue = NULL;           // Set rear to NULL as well
+}
+
+// Function to display all queue values
+void displayQueue() {
+    Node* temp = frontQueue;        // Start from front
+
+    while (temp != NULL) {          // Loop until end
+        cout << temp->data << " ";  // Print each node value
+        temp = temp->next;          // Move to next
+    }
+    cout << endl;                   // New line after printing
+}
+
+// Function to reverse the queue
+void reverseQueue() {
+    Node* prev = NULL;              // Previous node pointer
+    Node* curr = frontQueue;        // Current node pointer
+    Node* next = NULL;              // Next node pointer
+
+    rearQueue = frontQueue;         // After reversing, front becomes the rear
+
+    while (curr != NULL) {          // Loop until end
+        next = curr->next;          // Save next node
+        curr->next = prev;          // Reverse link
+        prev = curr;                // Move prev forward
+        curr = next;                // Move curr forward
+    }
+
+    frontQueue = prev;              // Update front to the last visited node
+}
+
+int main() {
+
+    enqueue(10);                    // Add 10 to queue
+    enqueue(20);                    // Add 20
+    enqueue(30);                    // Add 30
+
+    cout << "Queue: ";
+    displayQueue();                 // Output: 10 20 30
+
+    dequeue();                      // Remove 10
+
+    cout << "Queue after dequeue: ";
+    displayQueue();                 // Output: 20 30
+
+    cout << "Number of elements: " << countQueue() << endl;
+
+    reverseQueue();                 // Reverse the queue
+
+    cout << "Queue after reversing: ";
+    displayQueue();                 // Output: 30 20
+
+    return 0;                       // End of program
+}
